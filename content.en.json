@@ -1,0 +1,549 @@
+{
+  "_about": "Hand-maintained English text for the paper site. bench/build_site.py merges it with the run records under experiments/ and writes site/data.js. Numbers are never typed here: they come from scores.json. sources[*].sequence (the exact clip id) is a record for the group and is never written to the page, so the page does not point at the ground truth of a clip.",
+  "repo": {
+    "url": "https://github.com/runqiuw/AgentMotionBench-Prelim",
+    "public": false,
+    "_note": "Where the Code, GitHub and run-record links point. A --public build carries these links only when public is true. The URL names an account, so leave it false while the repository is private or the authors are anonymous."
+  },
+  "figure": {
+    "run": "007_real_video/g1_sidekick_run1",
+    "strip_box": [0.27, 0.15, 0.70, 0.70],
+    "mesh_box": [0.16, 0.14, 0.68, 0.78],
+    "public_runs": [
+      "008_quadruped_forent/quadruped_astra_high_run1"
+    ],
+    "examples": [
+      {"run": "008_quadruped_forent/quadruped_astra_high_run1", "label": "Quadruped robot"},
+      {"run": "008_quadruped_forent/krump_opus_medium_run1", "label": "Dancer"},
+      {"run": "008_quadruped_forent/horse_opus_medium_run1", "label": "Horse"}
+    ],
+    "_note": "The overview figure in The task (Figure 2), drawn by bench/fig_task_flow.py from one run. The internal build uses run. A --public build uses the first of run, public_runs whose footage source has redistribution ok, because the figure shows frames of the input video."
+  },
+  "featured": [
+    "008_quadruped_forent/krump_opus_medium_run1",
+    "008_quadruped_forent/horse_opus_medium_run1",
+    "007_real_video/arm_droid_run1",
+    "007_real_video/g1_sidekick_run1",
+    "008_quadruped_forent/quadruped_astra_high_run1"
+  ],
+  "sources": {
+    "synthetic": {
+      "name": "Synthetic render (ours)",
+      "detail": "Rendered in MuJoCo with the Unitree G1 model from MuJoCo Menagerie; the rendered trajectory is the exact ground truth.",
+      "licence": "Our render; robot model under the Menagerie licence (BSD-3-Clause)",
+      "redistribution": "ok"
+    },
+    "droid": {
+      "name": "DROID 1.0.1",
+      "url": "https://droid-dataset.github.io/",
+      "detail": "Real Franka Panda episodes with joint-encoder ground truth and an external camera.",
+      "licence": "CC BY 4.0",
+      "redistribution": "ok"
+    },
+    "forent": {
+      "name": "ForEnt",
+      "url": "https://doi.org/10.5281/zenodo.23802853",
+      "detail": "Third-person video of a quadruped robot with joint-encoder logs.",
+      "licence": "CC BY 4.0",
+      "redistribution": "ok",
+      "sequence": "site_6_2"
+    },
+    "aist": {
+      "name": "AIST++ / AIST Dance Video DB",
+      "url": "https://google.github.io/aistplusplus_dataset/",
+      "detail": "Studio dance videos with multi-camera 3D keypoints and SMPL fits.",
+      "licence": "Annotations CC BY 4.0; videos research use only, no redistribution",
+      "redistribution": "input-restricted"
+    },
+    "pferd": {
+      "name": "PFERD",
+      "url": "https://doi.org/10.7910/DVN/2EXONE",
+      "detail": "Horse motion capture with an hSMAL model fit and synchronised video.",
+      "licence": "Non-commercial, single user, no redistribution",
+      "redistribution": "restricted",
+      "sequence": "20201128_ID_1_0007"
+    },
+    "asap": {
+      "name": "ASAP project page video + ASAP reference motion",
+      "url": "https://agile.human2humanoid.com",
+      "detail": "Real humanoid video; ground truth is the controller's reference motion (weak: the robot's real motion differs by its tracking error).",
+      "licence": "Reference motion MIT; video has no licence",
+      "redistribution": "input-restricted"
+    },
+    "beyondmimic_lafan": {
+      "name": "BeyondMimic project page video + LAFAN1 retarget",
+      "url": "https://beyondmimic.github.io",
+      "detail": "Handheld real humanoid video; ground truth is the retargeted LAFAN1 reference motion (weak).",
+      "licence": "Video has no licence; LAFAN1 is CC BY-NC-ND 4.0",
+      "redistribution": "restricted"
+    },
+    "beyondmimic_pbhc": {
+      "name": "BeyondMimic project page video + PBHC reference motion",
+      "url": "https://beyondmimic.github.io",
+      "detail": "Fixed-camera real humanoid video; ground truth is the PBHC side-kick reference motion (weak).",
+      "licence": "Video and reference repository have no licence",
+      "redistribution": "restricted"
+    }
+  },
+  "experiments": {
+    "001": {
+      "title": "Smoke test: a synthetic humanoid clip",
+      "short": "Smoke test",
+      "question": "Does the whole pipeline run? The agent watches a rendered video of a humanoid and outputs the trajectory of 29 joints.",
+      "finding": "It runs. The motion is broadly right but the wave is lost: position error is below the frozen pose, velocity error is level with it.",
+      "conditions": [
+        {
+          "name": "Original video",
+          "given": [
+            "Synthetic video (same renderer as the ground truth)",
+            "Camera calibration",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Ground truth"
+          ]
+        }
+      ]
+    },
+    "002": {
+      "title": "Oracle keypoints instead of video",
+      "short": "Oracle keypoints",
+      "question": "Is the error in seeing or in solving? Hand the agent ground-truth keypoints and no video.",
+      "finding": "With ground-truth keypoints the motion is recovered almost exactly. The bottleneck is perception, not fitting.",
+      "status_note": "Diagnostic only: the input is ground-truth keypoints, not video, which is outside the task.",
+      "conditions": [
+        {
+          "name": "Ground-truth 2D keypoints",
+          "given": [
+            "Pixel coordinates of 22 ground-truth keypoints",
+            "Camera calibration",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Video",
+            "Depth"
+          ]
+        },
+        {
+          "name": "Ground-truth 3D keypoints",
+          "given": [
+            "3D coordinates of 22 ground-truth keypoints",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Video"
+          ]
+        }
+      ]
+    },
+    "003": {
+      "title": "Render gap",
+      "short": "Render gap",
+      "question": "How much is left when the agent can no longer match its own render to the video pixel for pixel?",
+      "finding": "Changing only the look of the scene already breaks most of the render-and-compare loop; an unknown moving camera breaks more. Telling the agent how the camera moves did not help. Two runs of the same condition differ widely.",
+      "conditions": [
+        {
+          "name": "Changed appearance",
+          "given": [
+            "Video with changed colours, background and lighting",
+            "Camera calibration",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "A scene that matches the video"
+          ]
+        },
+        {
+          "name": "Changed appearance, moving camera, motion hint",
+          "given": [
+            "Video with changed appearance and a moving camera",
+            "A sentence describing how the camera moves",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Camera calibration"
+          ]
+        },
+        {
+          "name": "Changed appearance, unknown moving camera",
+          "given": [
+            "Video with changed appearance and a moving camera",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Camera calibration"
+          ]
+        }
+      ],
+      "order": [
+        "app_run1",
+        "app_run2",
+        "app+cam_run1",
+        "app+cam_run2",
+        "app+cam_hint_run1"
+      ]
+    },
+    "004": {
+      "title": "Motion-capture clips retargeted to the humanoid",
+      "short": "Mocap clips",
+      "question": "Can the agent still recreate fast motion-capture clips with turns and travel?",
+      "finding": "Two clips, one configuration, opposite outcomes. The run records were not kept, so these runs cannot be re-scored with the current metric.",
+      "status_note": "No run records in the repository.",
+      "conditions": [
+        {
+          "name": "Retargeted mocap clips",
+          "given": [
+            "Synthetic video",
+            "Camera calibration",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Ground truth"
+          ]
+        }
+      ]
+    },
+    "005": {
+      "title": "Ready-made tools for the agent",
+      "short": "Agent tools",
+      "question": "If rendering, forward kinematics and comparison are handed over as tools, do scores change?",
+      "finding": "The tools were used; of two clips one score rose and one fell, so no effect can be attributed to them. The run records were not kept.",
+      "status_note": "No run records in the repository; the current protocol never hands over a matched renderer.",
+      "conditions": [
+        {
+          "name": "With a matched rendering toolkit",
+          "given": [
+            "Synthetic video",
+            "Camera calibration",
+            "A toolkit that renders the same scene from the same camera",
+            "Humanoid model: kinematics and meshes, make named",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Ground truth"
+          ]
+        }
+      ]
+    },
+    "006": {
+      "title": "No robot appearance",
+      "short": "No meshes",
+      "question": "With a kinematic model only, the agent cannot render what the robot looks like. How much is left?",
+      "finding": "Worse than a frozen pose in both runs. The agents built capsule bodies or hand-labelled keypoints, and lost the depth direction.",
+      "status_note": "Diagnostic only: the current protocol always gives the mesh model.",
+      "conditions": [
+        {
+          "name": "Kinematic model only",
+          "given": [
+            "Synthetic video (the smoke-test clip)",
+            "Camera calibration",
+            "Humanoid kinematic model without meshes",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Robot meshes"
+          ]
+        }
+      ]
+    },
+    "007": {
+      "title": "Real video: a humanoid, a robot arm, a person",
+      "short": "Real video",
+      "question": "How far does the agent get when the video is real footage?",
+      "finding": "The calibrated, slow robot arm is recovered well. The real humanoid clips are not: only the fixed-camera side kick beats its frozen pose. The human clip was a keypoint task and has no mesh score.",
+      "conditions": [
+        {
+          "name": "Real humanoid, camera unknown",
+          "given": [
+            "Real robot video",
+            "Humanoid model: kinematics and meshes",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Camera calibration",
+            "World frame"
+          ]
+        },
+        {
+          "name": "Robot arm, model given",
+          "given": [
+            "Real robot video",
+            "Camera intrinsics and extrinsics",
+            "Arm model: kinematics and meshes",
+            "Joint names and ranges",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": []
+        },
+        {
+          "name": "Robot arm, model withheld",
+          "given": [
+            "Real robot video from a different lab",
+            "Camera intrinsics and extrinsics",
+            "Joint names, ranges and zero convention",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Robot model"
+          ]
+        },
+        {
+          "name": "Person, keypoints only",
+          "given": [
+            "Video of a dancer",
+            "Camera intrinsics, extrinsics and world frame",
+            "Names of 17 keypoints",
+            "A time budget of 30–40 minutes"
+          ],
+          "withheld": [
+            "Body model"
+          ]
+        }
+      ],
+      "order": [
+        "arm_droid_run1",
+        "arm_droid_nomodel_run1",
+        "g1_sidekick_run1",
+        "g1_asap_run1",
+        "g1_bm_run1",
+        "human_aist_run1"
+      ]
+    },
+    "008": {
+      "title": "Three bodies from real video, mesh model given, no calibration",
+      "short": "Three bodies",
+      "question": "Given an anonymous mesh model and no camera calibration, can agents recreate the motion of different bodies from real video?",
+      "finding": "Heading, turns and large poses come out right; limbs and timing do not. On all three bodies velocity error stays close to the frozen pose: sparse keyframes with interpolation erase fast motion.",
+      "conditions": [
+        {
+          "name": "Quadruped robot",
+          "given": [
+            "Cropped real video: standing up, standing, first steps",
+            "Anonymous robot model: kinematics and meshes",
+            "Names, ranges and zero convention of 12 joints",
+            "Video fps, frame count, resolution and the output format",
+            "No time budget"
+          ],
+          "withheld": [
+            "Camera intrinsics and extrinsics",
+            "World frame and gravity direction",
+            "Robot make and dataset source",
+            "Encoder ground truth and sync metadata",
+            "Any matched rendering toolkit"
+          ]
+        },
+        {
+          "name": "Horse",
+          "given": [
+            "Cropped real video, the crop follows the horse",
+            "Anonymous horse mesh model: 1,497 vertices, 36 joints, fixed shape",
+            "Names and pose description of 36 joints",
+            "Video fps, frame count, resolution and the output format",
+            "No time budget"
+          ],
+          "withheld": [
+            "Camera intrinsics and extrinsics",
+            "World frame and gravity direction",
+            "Model and dataset source",
+            "Motion-capture ground truth"
+          ]
+        },
+        {
+          "name": "Dancer",
+          "given": [
+            "Cropped real video",
+            "Anonymous human mesh model: 6,890 vertices, 24 joints, fixed shape",
+            "Names and pose description of 24 joints",
+            "Video fps, frame count, resolution and the output format",
+            "No time budget"
+          ],
+          "withheld": [
+            "Camera intrinsics and extrinsics",
+            "World frame and gravity direction",
+            "Dataset source",
+            "Multi-camera ground-truth fit"
+          ]
+        }
+      ],
+      "order": [
+        "quadruped_astra_high_run1",
+        "horse_opus_medium_run1",
+        "krump_opus_medium_run1"
+      ]
+    }
+  },
+  "runs": {
+    "001_smoke/run1": {
+      "label": "Humanoid, squat and wave",
+      "tab": "Humanoid (synthetic)",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "4 s synthetic clip: squat, raise the arms, wave."
+    },
+    "002_oracle_input/kp2d_run1": {
+      "label": "Humanoid, oracle 2D keypoints",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "The smoke-test motion, given as 2D keypoints instead of video."
+    },
+    "002_oracle_input/kp3d_run1": {
+      "label": "Humanoid, oracle 3D keypoints",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "The smoke-test motion, given as 3D keypoints instead of video."
+    },
+    "003_render_gap/app_run1": {
+      "label": "Humanoid, changed appearance, run 1",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "The smoke-test motion re-rendered with new colours, clutter and moving light."
+    },
+    "003_render_gap/app_run2": {
+      "label": "Humanoid, changed appearance, run 2",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "The smoke-test motion re-rendered with new colours, clutter and moving light."
+    },
+    "003_render_gap/app+cam_run1": {
+      "label": "Humanoid, moving camera, run 1",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "Changed appearance plus an orbiting handheld camera."
+    },
+    "003_render_gap/app+cam_run2": {
+      "label": "Humanoid, moving camera, run 2",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "Changed appearance plus an orbiting handheld camera."
+    },
+    "003_render_gap/app+cam_hint_run1": {
+      "label": "Humanoid, moving camera, with hint",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "As above; the prompt also says how the camera moves."
+    },
+    "006_no_mesh/run1": {
+      "label": "Humanoid, kinematics only, run 1",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "The smoke-test clip; the agent's model has no meshes."
+    },
+    "006_no_mesh/run2": {
+      "label": "Humanoid, kinematics only, run 2",
+      "bodyName": "Humanoid robot",
+      "source": "synthetic",
+      "gt": "Simulator state, exact",
+      "clip": "The smoke-test clip; the agent's model has no meshes."
+    },
+    "007_real_video/arm_droid_run1": {
+      "label": "Robot arm, moving a pillow",
+      "tab": "Robot arm",
+      "bodyName": "Robot arm",
+      "source": "droid",
+      "gt": "Joint encoders",
+      "clip": "20 s of a 7-joint arm rearranging pillows on a sofa, seen from an external camera.",
+      "inputOverlay": true
+    },
+    "007_real_video/arm_droid_nomodel_run1": {
+      "label": "Robot arm, folding cloth, model withheld",
+      "bodyName": "Robot arm",
+      "source": "droid",
+      "gt": "Joint encoders",
+      "clip": "20 s of the same arm type in another lab, seen from behind; no robot model given.",
+      "inputOverlay": true
+    },
+    "007_real_video/g1_asap_run1": {
+      "label": "Real humanoid, side jump",
+      "bodyName": "Humanoid robot",
+      "source": "asap",
+      "gt": "Controller reference motion (weak)",
+      "clip": "Tripod shot of a side jump, slowed to half speed by the source."
+    },
+    "007_real_video/g1_bm_run1": {
+      "label": "Real humanoid, jumps, handheld camera",
+      "bodyName": "Humanoid robot",
+      "source": "beyondmimic_lafan",
+      "gt": "Controller reference motion (weak)",
+      "clip": "A handheld camera follows the robot through jumps and kicks."
+    },
+    "007_real_video/g1_sidekick_run1": {
+      "label": "Real humanoid, side kick",
+      "tab": "Humanoid",
+      "bodyName": "Humanoid robot",
+      "source": "beyondmimic_pbhc",
+      "gt": "Controller reference motion (weak)",
+      "clip": "3.5 s, fixed camera, one complete side kick."
+    },
+    "007_real_video/human_aist_run1": {
+      "label": "Dancer, break dance, keypoints only",
+      "bodyName": "Human",
+      "source": "aist",
+      "gt": "Multi-camera 3D keypoints",
+      "clip": "10 s of break dance; the agent outputs 17 keypoints, not a mesh motion.",
+      "inputOverlay": true
+    },
+    "008_quadruped_forent/quadruped_astra_high_run1": {
+      "label": "Quadruped robot, stand up and walk",
+      "tab": "Quadruped",
+      "bodyName": "Quadruped robot",
+      "source": "forent",
+      "gt": "Joint encoders, trunk frame only",
+      "clip": "10 s on a forest path: the end of standing up, standing, first steps.",
+      "views": [
+        "Trunk view 1",
+        "Trunk view 2"
+      ],
+      "viewNote": "Canonical views of the trunk frame; the camera is uncalibrated and the trunk's pose is not scored."
+    },
+    "008_quadruped_forent/horse_opus_medium_run1": {
+      "label": "Horse, lunging on a circle",
+      "tab": "Horse",
+      "bodyName": "Horse",
+      "source": "pferd",
+      "gt": "Motion capture (model fit)",
+      "clip": "15 s in a riding hall: the horse circles its handler, then turns back."
+    },
+    "008_quadruped_forent/krump_opus_medium_run1": {
+      "label": "Dancer, Krump",
+      "tab": "Dancer",
+      "bodyName": "Human",
+      "source": "aist",
+      "gt": "Multi-camera body-model fit",
+      "clip": "15 s of Krump: turns, a side kick, a squat and a jump.",
+      "posterFrame": 60
+    }
+  },
+  "models": {
+    "claude-opus-5-5": "Claude Opus 5.5",
+    "gpt-6-astra": "GPT-6 Astra"
+  },
+  "featured_public_extra": [
+    "001_smoke/run1"
+  ]
+}
