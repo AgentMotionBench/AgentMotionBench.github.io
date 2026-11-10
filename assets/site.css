@@ -260,8 +260,6 @@ h1 { font-weight: 800; font-stretch: 121%; font-size: clamp(24px, min(8.3vw, max
 .link-btn { appearance: none; background: none; border: 0; padding: 2px 0; font: 500 12.5px/1.4 var(--sans); color: var(--s-ink-2); cursor: pointer; text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
 .link-btn:hover { color: var(--s-ink); text-decoration-thickness: 2px; text-decoration-color: var(--agent); }
 .link-btn[hidden] { display: none; }
-.figcap { margin-top: 10px; margin-left: 64px; min-height: 1.55em; max-width: none; font-size: 13.5px; line-height: 1.55; color: var(--s-ink-2); text-wrap: pretty; }
-.figcap b { color: var(--s-ink); font-weight: 700; }
 
 /* opening: panels wipe in left to right, then the curve draws. Visible by default; JS adds .opening. */
 @media (prefers-reduced-motion: no-preference) {
@@ -431,7 +429,6 @@ footer { padding: 30px var(--gutter) 44px; border-top: 1px solid var(--rule); fo
   .pn figcaption { min-height: 30px; align-content: center; }
   .scrub { grid-template-columns: 46px minmax(0, 1fr); row-gap: 8px; }
   .read { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; justify-items: start; gap: 4px 16px; }
-  .figcap { margin-left: 0; }
   /* first screen on narrow viewports: title, tabs, footage, curve; the view toggle moves under the curve */
   .hero .stage-in { display: flex; flex-direction: column; }
   .hero .picker, .hero #hero-figure { display: contents; }
@@ -439,7 +436,6 @@ footer { padding: 30px var(--gutter) 44px; border-top: 1px solid var(--rule); fo
   .hero .tri, .hero .novideo { order: 2; width: 100%; }
   .hero .scrub { order: 3; }
   .hero .seg { order: 4; align-self: flex-start; margin: 10px 0 0; }
-  .hero .figcap { order: 5; }
   .ex-head .seg { margin: 0; }
   .mx { grid-template-columns: minmax(0, 1fr); border-top: 0; }
   .mx-h { display: none; }
@@ -506,7 +502,6 @@ footer { padding: 30px var(--gutter) 44px; border-top: 1px solid var(--rule); fo
   .hero { padding-bottom: 10px; }
   .hero .tri { --ph: clamp(180px, calc(100svh - 390px), 440px); }
   .hero .plot { height: 64px; }
-  .hero .figcap { margin-top: 8px; }
   .sec.first { padding-top: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {

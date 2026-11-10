@@ -495,12 +495,6 @@
         hero.load(r, { play: hero.playing || hero.wantPlay });
       },
     }, r.tab || r.label, isMain(r) ? null : el('span', { class: 'tp', text: 'earlier protocol' }))));
-    const cap = $('#hero-clip');
-    heroRoot.addEventListener('runchange', ev => {
-      const r = ev.detail;
-      if (cap) cap.textContent = `${r.label}: ${r.modelName}, ${r.effort} effort, ${protocolPhrase(r)}.`
-        + (r.npve == null ? '' : ` Score ${score(r.skill)} of 100; nPVE ${pct(r.npve)} % against ${pct(r.refNpve)} % for a frozen pose.`);
-    });
     if (!reduceMotion) { heroRoot.classList.add('opening'); setTimeout(() => heroRoot.classList.remove('opening'), 2600); }
     hero.load(list[0], { play: true });
   }

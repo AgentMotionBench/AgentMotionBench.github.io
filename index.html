@@ -48,7 +48,6 @@
       <div class="seg" id="hero-views"></div>
     </div>
     <div id="hero-figure"></div>
-    <p class="figcap"><b>Figure 1.</b> <span id="hero-clip"></span> Drag the curve to scrub.</p>
   </div>
 </section>
 
@@ -56,9 +55,9 @@
   <div class="sec-in">
     <header><h2 id="h-abstract">Abstract</h2></header>
     <div class="body">
-      <p class="lede">Coding agents have started to make video the agent-native way: instead of sampling pixels, they write code and drive 3D tools to build a scene and animate it. Motion is still their weak part, and we lack a way to measure it on its own.</p>
-      <p class="prose">AgentMotionBench measures agent-native motion generation. To our knowledge it is the first benchmark to evaluate this ability systematically and on its own: across robots, people and animals, with the body model and the scoring fixed, so that only the motion is measured, against hidden 3D ground truth. It has two tasks. In <em>motion reconstruction</em> the agent watches a video, is handed the body's mesh model, and returns joint angles for every frame; it gets nothing a video found online would not come with: no camera calibration, no world frame. In <em>motion editing</em> it changes a given motion to follow a text instruction. We drive the mesh with the answer and compare its surface with the ground truth: 0 is no better than one pose held still, 100 is the truth. In pilot reconstruction runs a horse, a dancer and a quadruped robot score <span data-run-val="008_quadruped_forent/horse_opus_medium_run1|skill">46</span>, <span data-run-val="008_quadruped_forent/krump_opus_medium_run1|skill">19</span> and <span data-run-val="008_quadruped_forent/quadruped_astra_high_run1|skill">8</span>.</p>
-      <p class="note-box"><strong>Preliminary.</strong> Every number here is a single run, and models differ between runs, so the numbers do not rank agents. Runs from an earlier protocol, which gave extras such as camera calibration, are marked as such in the run list. Motion editing and off-the-shelf baselines have not been run.</p>
+      <p class="lede">Coding agents now make video the agent-native way: they write code and drive 3D tools to build and animate a scene. Motion is still their weak part, and we lack a way to measure it.</p>
+      <p class="prose">AgentMotionBench measures agent-native motion generation. To our knowledge it is the first benchmark to evaluate it systematically: across robots, people and animals, with the body model and scoring fixed, against hidden 3D ground truth. In <em>motion reconstruction</em> the agent watches a video, gets the body's mesh model and returns joint angles for every frame, with no camera calibration and no world frame. In <em>motion editing</em> it changes a motion to follow a text instruction.</p>
+      <p class="note-box"><strong>Preliminary.</strong> Every number is a single run and models differ between runs, so numbers do not rank agents. Earlier-protocol runs, which got extras such as camera calibration, are marked in the run list. Motion editing and baselines have not been run.</p>
     </div>
   </div>
 </section>
