@@ -147,7 +147,8 @@ a:hover { text-decoration-thickness: 2px; text-decoration-color: var(--agent); }
 .title { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 32px; padding-top: clamp(16px, 1.9vw, 24px); }
 h1 { font-weight: 800; font-stretch: 121%; font-size: clamp(24px, min(8.3vw, max(31px, 4.1vw)), 56px); line-height: 1; letter-spacing: -.028em; }
 .sub { margin-top: 10px; font-weight: 500; font-stretch: 104%; font-size: clamp(17px, 1.55vw, 21.5px); line-height: 1.3; letter-spacing: -.005em; text-wrap: balance; }
-.by { margin-top: 6px; font-size: 14.5px; color: var(--s-ink-2); }
+.by { margin-top: 6px; font-size: 14.5px; color: var(--s-ink); }
+.by .role { color: var(--s-ink-2); margin-left: 4px; }
 .cta { display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* clip tabs + view toggle */
