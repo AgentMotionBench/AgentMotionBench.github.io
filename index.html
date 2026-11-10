@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentMotionBench: Can Coding Agents Recreate and Edit Whole-Body Motion?</title>
+<meta name="description" content="A benchmark that tests whether coding agents can recreate robot, human and animal motion from video, scored against hidden 3D ground truth. Preliminary release with pilot runs.">
+<meta name="theme-color" content="#0E1012">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#abstract">Skip to the abstract</a>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="wordmark" href="#top">AgentMotionBench</a>
+    <span class="tag" data-internal hidden title="This build shows footage whose licences do not allow redistribution. Build with --public before sharing it.">Internal preview</span>
+    <nav aria-label="Sections">
+      <a href="#task">Task</a>
+      <a href="#results">Results</a>
+      <a href="#runs">Runs</a>
+      <a href="#related">Related work</a>
+      <a data-repo-link hidden rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="stage hero" id="top" aria-labelledby="title">
+  <div class="stage-in">
+    <div class="title">
+      <div>
+        <h1 id="title">AgentMotionBench</h1>
+        <p class="sub">Can Coding Agents Recreate and Edit Whole-Body Motion?</p>
+        <p class="by">Anonymous authors · paper in preparation</p>
+      </div>
+      <div class="cta">
+        <span class="btn" role="link" aria-disabled="true" title="The paper is in preparation"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5l3 3v9.5H4z"/><path d="M9 1.75v3h3M6 8.5h4M6 11h4"/></svg>Paper (soon)</span>
+        <a class="btn btn-solid" data-repo-link hidden rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/></svg>Code</a>
+        <a class="btn btn-line" href="#runs"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1.5"/><path d="M6.75 6v4l3.25-2z"/></svg>Run browser</a>
+      </div>
+    </div>
+
+    <div class="picker">
+      <div class="tabs" id="hero-tabs" role="tablist" aria-label="Clip"></div>
+      <div class="seg" id="hero-views"></div>
+    </div>
+    <div id="hero-figure"></div>
+    <p class="figcap"><b>Figure 1.</b> <span id="hero-clip"></span> Drag the curve to scrub.</p>
+  </div>
+</section>
+
+<section class="sec first" id="abstract" aria-labelledby="h-abstract">
+  <div class="sec-in">
+    <header><h2 id="h-abstract">Abstract</h2></header>
+    <div class="body">
+      <p class="lede">Coding agents can now build games, scenes and simulations from a prompt, yet the motion inside them stays the weak part, and existing benchmarks cannot say by how much.</p>
+      <p class="prose">AgentMotionBench isolates motion. The agent watches a video of a robot, a person or an animal, is handed that body's mesh model, and returns joint angles for every frame. It gets nothing a video found online would not come with: no camera calibration, no world frame. We drive the mesh with its answer and compare it, point by point on the surface, with hidden 3D ground truth. Each run gets a score from 0, an answer that does not move, to 100, the true motion. <span data-needs-values>In pilot runs under this protocol a horse, a dancer and a quadruped robot score <span data-run-val="008_quadruped_forent/horse_opus_medium_run1|skill">–</span>, <span data-run-val="008_quadruped_forent/krump_opus_medium_run1|skill">–</span> and <span data-run-val="008_quadruped_forent/quadruped_astra_high_run1|skill">–</span>.</span></p>
+      <p class="note-box"><strong>Preliminary.</strong> Every number here is a single run, and models differ between rows, so rows do not rank agents. Runs under an earlier protocol, which gave extras such as camera calibration, are listed apart. The edit task and off-the-shelf baselines have not been run.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="task" aria-labelledby="h-task">
+  <div class="sec-in full">
+    <header><h2 id="h-task">The task</h2><p>The body model and the scoring are fixed, so the score reflects motion alone: not modelling, not rendering, not scene layout.</p></header>
+    <div class="body">
+      <figure class="mainfig" id="task-fig" hidden>
+        <div class="fig-scroll" tabindex="0" role="group" aria-label="The task from handoff to score; on a narrow screen it scrolls sideways">
+          <img id="task-fig-img" src="media/figure/task_flow.png" width="2700" height="1080" loading="lazy" decoding="async" alt="Four panels, left to right. Given: frames of a video, the body's mesh model with its joints, and what is withheld: camera calibration, world frame, matched renderer, time budget. Coding agent: its own code and tools, offline, no feedback from the scorer, one submission. Returned: joint angles for every frame. Scored on hidden 3D ground truth: the agent's mesh beside the true one, the two errors nPVE and nMPJVE, the score built on them, and error over time against the frozen pose.">
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="results" aria-labelledby="h-results">
+  <div class="sec-in full">
+    <header><h2 id="h-results">Pilot results</h2><p>Single runs, each with its score out of 100. Rows do not rank agents: model and reasoning effort differ between them.</p></header>
+    <div class="body">
+      <div class="mx" id="matrix"></div>
+      <div class="tbl-wrap gap">
+        <table class="res" id="res-main">
+          <caption><b>Table 1. Main protocol.</b> Real video, anonymous mesh model given, no calibration, no world frame, no time budget.</caption>
+          <thead><tr><th scope="col">Clip</th><th scope="col">Agent</th><th scope="col" class="n">Score</th><th scope="col" class="n">nPVE %</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nPVE, agent against frozen pose</span></th><th scope="col" class="n">nMPJVE %/s</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nMPJVE, agent against frozen pose</span></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap gap">
+        <table class="res" id="res-earlier">
+          <caption><b>Table 2. Earlier protocol.</b> These runs were given extras the main protocol withholds, such as camera calibration, a named robot model or a time budget. Not comparable with Table 1.</caption>
+          <thead><tr><th scope="col">Clip</th><th scope="col">Agent</th><th scope="col" class="n">Score</th><th scope="col" class="n">nPVE %</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nPVE, agent against frozen pose</span></th><th scope="col" class="n">nMPJVE %/s</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nMPJVE, agent against frozen pose</span></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="legend-row"><span><i class="mk"></i>agent, below the frozen pose</span><span><i class="mk open"></i>agent, at or above it</span><span><i class="mk tick"></i>frozen pose</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="stage runs" id="runs" aria-labelledby="h-runs">
+  <div class="stage-in">
+    <h2 id="h-runs">Every recorded run</h2>
+    <p class="intro">All <span data-stat="runs">19</span> runs, with what each agent was given and what was withheld.</p>
+    <div class="ex">
+      <nav class="ex-list" id="ex-list" aria-label="Runs"></nav>
+      <div class="ex-main">
+        <div class="ex-head">
+          <h3 id="ex-title"></h3>
+          <div class="seg" id="ex-views"></div>
+          <p id="ex-clip"></p>
+        </div>
+        <div id="ex-figure"></div>
+        <div class="facts" id="ex-facts"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="related" aria-labelledby="h-related">
+  <div class="sec-in">
+    <header><h2 id="h-related">Related benchmarks</h2><p>What each one tests, and how it scores.</p></header>
+    <div class="body">
+      <div class="tbl-wrap">
+        <table id="rel" class="stack">
+          <thead><tr><th scope="col">Work</th><th scope="col">Tests general-purpose agents</th><th scope="col">Human or humanoid whole-body motion</th><th scope="col">Scored against 3D ground truth</th><th scope="col">Text-driven motion editing</th></tr></thead>
+          <tbody>
+            <tr class="us"><th scope="row">AgentMotionBench</th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="and other bodies; the model is given"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="hidden; surface points"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="specified; not yet run"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td></tr>
+            <tr><th scope="row"><a href="https://refresh.dev/blog/blenderbench" rel="noopener">BlenderBench</a></th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="armature animation against a reference; not stated whether the reference is video"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="half numeric checks, half visual evaluation"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="one task adds a lead-in to an animation"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2610.16577" rel="noopener">CineRecon</a></th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="the agent must also build the character"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="vision-language checklist, input camera only"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://huggingface.co/papers/2610.23986" rel="noopener">BlenderWorld</a></th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="a character-animation category; details not verified"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="rubric and vision-language model; not verified"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="not seen; not verified"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2610.04432" rel="noopener">Video2World</a></th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="robot manipulation scenes"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="object trajectories, not bodies"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2610.03715" rel="noopener">4DCodeBench</a></th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="humans and animals excluded"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="on synthetic scenes"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2610.40754" rel="noopener">DyCraft</a></th><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="generates humanoid animation; no reference to recreate"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="human preference, penetration and floating rates"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="not verified"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2610.21515" rel="noopener">TRACE</a></th><td title="a language model only parses the instruction"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="humanoid"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="edit success judged with private masks and thresholds"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2512.05094" rel="noopener">GenMimicBench</a></th><td title="trained tracking policies"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="generated video to humanoid"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="reference comes from video reconstruction"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2412.17730" rel="noopener">Mimicking-Bench</a></th><td title="retargeting, tracking and imitation pipelines"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="humanoid and scene interaction"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="abstract only; not verified"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="not mentioned in the abstract"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td></tr>
+            <tr><th scope="row"><a href="https://arxiv.org/abs/2408.00712" rel="noopener">MotionFix</a></th><td title="diffusion models"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td title="human"><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td><td title="retrieval metrics"><span class="no"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 7h7"/></svg>No</span></td><td><span class="yes"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 5.5 10.5 11.5 3.5"/></svg>Yes</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="cite" aria-labelledby="h-cite">
+  <div class="sec-in">
+    <header><h2 id="h-cite">Cite</h2></header>
+    <div class="body">
+      <div class="bib">
+        <button class="btn btn-line" id="copy-bib" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="9" rx="1.25"/><path d="M10.75 5V3A1.25 1.25 0 0 0 9.5 1.75H4A1.25 1.25 0 0 0 2.75 3v7A1.25 1.25 0 0 0 4 11.25h1"/></svg><span>Copy</span></button>
+<pre id="bibtex">@misc{agentmotionbench2026,
+  title  = {AgentMotionBench: Can Coding Agents Recreate
+            and Edit Whole-Body Motion?},
+  author = {Anonymous},
+  year   = {2026},
+  note   = {In preparation}
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <b>AgentMotionBench</b>
+    <span>Preliminary release, built from <span data-stat="runs">19</span> recorded runs</span>
+    <a data-repo-link hidden rel="noopener">Repository</a>
+    <a href="../dashboard.html" data-repo-only hidden>Internal run dashboard</a>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
