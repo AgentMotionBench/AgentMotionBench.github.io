@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AgentMotionBench: Can Coding Agents Recreate and Edit Whole-Body Motion?</title>
-<meta name="description" content="A benchmark that tests whether coding agents can recreate robot, human and animal motion from video, scored against hidden 3D ground truth. Preliminary release with pilot runs.">
+<meta name="description" content="AgentMotionBench: a benchmark for agent-native motion generation. Coding agents reconstruct and edit robot, human and animal motion, scored against hidden 3D ground truth. Preliminary release with pilot runs.">
 <meta name="theme-color" content="#0E1012">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/fonts.css">
@@ -56,9 +56,9 @@
   <div class="sec-in">
     <header><h2 id="h-abstract">Abstract</h2></header>
     <div class="body">
-      <p class="lede">Coding agents can now build games, scenes and simulations from a prompt, yet the motion inside them stays the weak part, and existing benchmarks cannot say by how much.</p>
-      <p class="prose">AgentMotionBench isolates motion. The agent watches a video of a robot, a person or an animal, is handed that body's mesh model, and returns joint angles for every frame. It gets nothing a video found online would not come with: no camera calibration, no world frame. We drive the mesh with its answer and compare it, point by point on the surface, with hidden 3D ground truth. Each run gets a score from 0, no better than one pose held still, to 100, the ground truth. In pilot runs under this protocol a horse, a dancer and a quadruped robot score <span data-run-val="008_quadruped_forent/horse_opus_medium_run1|skill">46</span>, <span data-run-val="008_quadruped_forent/krump_opus_medium_run1|skill">19</span> and <span data-run-val="008_quadruped_forent/quadruped_astra_high_run1|skill">8</span>.</p>
-      <p class="note-box"><strong>Preliminary.</strong> Every number here is a single run, and models differ between rows, so rows do not rank agents. Runs under an earlier protocol, which gave extras such as camera calibration, are listed apart. The edit task and off-the-shelf baselines have not been run.</p>
+      <p class="lede">Coding agents have started to make video the agent-native way: instead of sampling pixels, they write code and drive 3D tools to build a scene and animate it. Motion is still their weak part, and we lack a way to measure it on its own.</p>
+      <p class="prose">AgentMotionBench measures agent-native motion generation. To our knowledge it is the first benchmark to evaluate this ability systematically and on its own: across robots, people and animals, with the body model and the scoring fixed, so that only the motion is measured, against hidden 3D ground truth. It has two tasks. In <em>motion reconstruction</em> the agent watches a video, is handed the body's mesh model, and returns joint angles for every frame; it gets nothing a video found online would not come with: no camera calibration, no world frame. In <em>motion editing</em> it changes a given motion to follow a text instruction. We drive the mesh with the answer and compare its surface with the ground truth: 0 is no better than one pose held still, 100 is the truth. In pilot reconstruction runs a horse, a dancer and a quadruped robot score <span data-run-val="008_quadruped_forent/horse_opus_medium_run1|skill">46</span>, <span data-run-val="008_quadruped_forent/krump_opus_medium_run1|skill">19</span> and <span data-run-val="008_quadruped_forent/quadruped_astra_high_run1|skill">8</span>.</p>
+      <p class="note-box"><strong>Preliminary.</strong> Every number here is a single run, and models differ between runs, so the numbers do not rank agents. Runs from an earlier protocol, which gave extras such as camera calibration, are marked as such in the run list. Motion editing and off-the-shelf baselines have not been run.</p>
     </div>
   </div>
 </section>
@@ -69,7 +69,7 @@
     <div class="body">
       <figure class="mainfig" id="task-fig" hidden>
         <div class="fig-scroll" tabindex="0" role="group" aria-label="The task from handoff to score; on a narrow screen it scrolls sideways">
-          <img id="task-fig-img" src="media/figure/task_flow.png" width="2700" height="1080" loading="lazy" decoding="async" alt="Four panels, left to right. Given: frames of a video, the body's mesh model with its joints, and what is withheld: camera calibration, world frame, matched renderer, time budget. Coding agent: its own code and tools, offline, no feedback from the scorer, one submission. Returned: joint angles for every frame. Scored on hidden 3D ground truth: the agent's mesh beside the true one, the two errors nPVE and nMPJVE, the score built on them, and error over time against the frozen pose.">
+          <img id="task-fig-img" src="media/figure/task_flow.png" width="2700" height="1080" loading="lazy" decoding="async" alt="Two tasks are named at the top: motion reconstruction (a video in, joint angles for every frame out, scored by surface error against hidden 3D ground truth) and motion editing (a motion and a text instruction in, the edited joint angles out, scored on the edit being made and the rest being kept). Below, motion reconstruction step by step. Four panels, left to right. Given: frames of a video, the body's mesh model with its joints, and what is withheld: camera calibration, world frame, matched renderer, time budget. Coding agent: its own code and tools, offline, no feedback from the scorer, one submission. Returned: joint angles for every frame. Scored on hidden 3D ground truth: the agent's mesh beside the true one, the two errors nPVE and nMPJVE, the score built on them, and error over time against the frozen pose.">
         </div>
       </figure>
     </div>
@@ -82,15 +82,7 @@
     <div class="body">
       <div class="mx" id="matrix"></div>
       <div class="tbl-wrap gap">
-        <table class="res" id="res-main">
-          <caption><b>Table 1. Main protocol.</b> Real video, anonymous mesh model given, no calibration, no world frame, no time budget.</caption>
-          <thead><tr><th scope="col">Clip</th><th scope="col">Agent</th><th scope="col" class="n">Score</th><th scope="col" class="n">nPVE %</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nPVE, agent against frozen pose</span></th><th scope="col" class="n">nMPJVE %/s</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nMPJVE, agent against frozen pose</span></th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="tbl-wrap gap">
-        <table class="res" id="res-earlier">
-          <caption><b>Table 2. Earlier protocol.</b> These runs were given extras the main protocol withholds, such as camera calibration, a named robot model or a time budget. Not comparable with Table 1.</caption>
+        <table class="res" id="res-all">
           <thead><tr><th scope="col">Clip</th><th scope="col">Agent</th><th scope="col" class="n">Score</th><th scope="col" class="n">nPVE %</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nPVE, agent against frozen pose</span></th><th scope="col" class="n">nMPJVE %/s</th><th scope="col" class="n">frozen</th><th scope="col"><span class="vh">nMPJVE, agent against frozen pose</span></th></tr></thead>
           <tbody></tbody>
         </table>

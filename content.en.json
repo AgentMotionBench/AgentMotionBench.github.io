@@ -8,7 +8,7 @@
   "figure": {
     "run": "007_real_video/g1_sidekick_run1",
     "strip_box": [0.27, 0.15, 0.70, 0.70],
-    "mesh_box": [0.16, 0.14, 0.68, 0.78],
+    "mesh_box": [0.18, 0.13, 0.64, 0.725],
     "public_runs": [
       "008_quadruped_forent/quadruped_astra_high_run1"
     ],

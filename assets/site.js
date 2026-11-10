@@ -604,9 +604,9 @@
     main: D.runs.filter(r => r.protocol === 'web' && !exps.get(r.exp).diagnostic),
     earlier: D.runs.filter(r => r.protocol !== 'web' && !exps.get(r.exp).diagnostic),
   };
-  for (const [k, rs] of Object.entries(groups)) {
-    const body = $(`#res-${k} tbody`);
-    if (body) body.replaceChildren(...rs.map(resultRow));
+  { // one table, main-protocol runs first; a row's tooltip says which protocol it ran under
+    const body = $('#res-all tbody');
+    if (body) body.replaceChildren(...[...groups.main, ...groups.earlier].map(r => { const tr = resultRow(r); tr.title = protocolPhrase(r); return tr; }));
   }
 
   // ------------------------------------------------------------------------------------------------ task matrix
