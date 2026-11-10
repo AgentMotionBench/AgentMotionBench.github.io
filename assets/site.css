@@ -291,8 +291,6 @@ h3 { font-weight: 700; font-stretch: 110%; font-size: 19px; line-height: 1.3; le
 .prose { max-width: 58ch; }
 .prose strong, .body strong { font-weight: 700; }
 .lede { font-size: clamp(18.5px, 1.55vw, 21px); line-height: 1.5; max-width: 50ch; letter-spacing: -.003em; }
-.note-box { max-width: 58ch; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper-2); font-size: 15.5px; line-height: 1.55; color: var(--ink-2); }
-.note-box strong { color: var(--ink); }
 code, .path { font-family: var(--mono); font-stretch: 87.5%; font-size: .8em; background: var(--paper-2); padding: .12em .36em; border-radius: 3px; }
 
 /* the paper's overview figure: one picture at the full measure; on a narrow screen it keeps a readable size and
